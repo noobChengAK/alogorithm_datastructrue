@@ -1,0 +1,248 @@
+Dynamic Programming
+===================
+
+Why does the 0/1 Knapsack Problem have the three necessary properties for dynamic programming?
+
+1. Simple Subproblems
+Part of Definition:
+There has to be some way of breaking the global optimization problem into subproblems('global optimization problem' means the whole backpack problem), each having a similar structure to the original problem.
+Moreover, there should be a simple way of defining subproblems with just a few indices, like i, j, k, and so on.
+
+So we Decompose the problem into smaller problems by construct an array V[0....I,O....W] we can assume i as things we can take and w as weight(contain/storage), V[i,w] is the value we can take can fit in the storage.
+
+2. Subproblem Optimality
+Part of Definition:
+An optimal solution to the global problem must be a composition of optimal subproblem solutions, using a relatively simple combining operation. 
+We should not be able to find a globally optimal solution that contains suboptimal subproblems.
+
+For understanding this,we can sum up the sub problems' best solution to get the whole problem's best solution
+Here is the state transition equation:
+Use V[i,w] = max(V[i-1,w],Vi + V[i-1,w-wi])
+for understanding the function, because the V[i-1,w] and Vi + V[i-1,w-wi] is the value we want to campare, The maximum value of the two  is the final value of V[i,w]
+so we can easily find that the Optimal V[i,w] is the maximum of the those two optimal problem solutions( get the best solution).
+
+3. Subproblem Overlap
+Part of Definition:
+Optimal solutions to unrelated subproblems can contain subproblems in common. 
+Indeed, such overlap allows us to improve the efficiency of a dynamic programming algorithm by storing solutions to subproblems.
+
+I want to use a example to explain this question:
+assume itemID '1' have weight '2' value '3'
+assume itemID '2' have weight '3' value '4'
+assume itemID '3' have weight '4' value '3'
+assume itemID '4' have weight '4' value '6'
+assume the weight(contain) of the backpack is '10'
+
+There is a situation that we choose one of itemID = 4 or itemID =3;then we need to think about choose itemID =2
+I this situation, we are in the V[2,6] because the weight are both '4' in the backpack and only 6 remaining space, so this V[2,6] all happend in the both two branches of the problem(sub_problem),so it is 'Subproblem Overlap' 
+
+
+Greedy
+======
+
+1.  Why is a greedy approach not necessarily optimal for 0/1 Knapsack?
+In the knapsack problem, the all the stuff in the list cannot be split(only the intigers and can not be seperated in to many parts which means we can't find the closest to the 'best'), 
+and the definition of the greedy  is to get all the best solution in the subproblems and try to make the whole problem to get a best solution .
+so using this alogorithm is easy to have local optimal solution (Use value/weight as a ratio and store the retio_value and choose the higher ratio_value item in to the backpack first), 
+and lead to have not incorrect results solution finally.
+
+E.G.
+assume itemID '1' have weight '10' value '100'
+assume itemID '2' have weight '6' value '54'
+assume itemID '3' have weight '6' value '48'
+assume the weight(contain) of the backpack is '12'
+
+ratio:
+itemID = 1 ;ratio : 10
+itemID = 2 ;ratio : 9
+itemID = 3 ;ratio : 8
+So greedy will choose itemID = 1 as a solution
+
+in this situation:
+because the definition of greedy(In the knapsack problem),the greedy will choose itemID = '1' as the solution because the ratio of the value/weight is '10' and get the value = 100 as the solution
+But we have another solution that choose itemID = 2 and itemID = 3 as the stuff in the backpack and the final value is 102 ; 102 is bigger than the greedy soluion (value = 100)
+
+
+2.  Is the greedy approach optimal for the Fractional Knapsack problem?  Explain your reasoning.
+The answer is YES and it can solve this problem.
+Above all, definition of the greedy as we said above is we sort the choise list by calculating the value/weight number into descending order(The bigger value will be chooen in the first order and the smaller value will be choosen later), 
+In this situation (Fractional Knapsack problem) the item can be splited (TO make the backpack finally full of item and the smallest item with higher value also can be split), so for the items in the list with a higher value/weight ratio and have unit weight, choose the item with a 'higher' value/weight ratio  is better than items with a 'smaller' ratio, 
+In the full operation: 
+1#
+we choose the full-item with current max value of (value/weight ratio) and into backpack
+2# 
+then detect if the back pack have more space to store next item
+3#
+if the space is not enough, we choose the next item and split it to make the backpack in to max weight
+if the space is enough for the next full-item with second value/weight ratio,we loop to state 1# 
+
+so we can find the final the optimal solution(best solution)
+
+
+Testing
+=======
+
+1.  Why can't you use full enumeration for large instances?
+
+Because the format of the enumeration is 2^n, it will grow very fast and have a higher gradient so we can't use the full enumeration for large instance
+E.G. 2^10 = 1024
+ 2^20 = 1048576
+
+Suppose one evaluation of a solutions takes 1 microsecond, how large an instance do you think can be practically solved in an hour?  Justify your answer.
+
+
+Because 1h = 3600000000 ms, and log2(3600000000) == 31.....and solution is close to 32 .So we can choose 32 as the final answer and  we can run 32  enumeration
+
+2.  Fill in the table below for each test set, noting whether or not you killed the algorithm.  Result should indicate whether the correct optimal solution has been found.  This should be 377 for easy.20.1.txt, 4077 for easy.200.4.txt, 126968 for hard1.200.11.txt and 1205259 for hard1.2000.1.txt.  You can generate this output using test.sh if you wish.
+
+===========================================
+Running on easy.20.1.txt for 30 seconds
+===========================================
+
+Algorithm |      Optimal Value       | Time Taken  | Result
+----------------------------------------------------------------
+enum      | 377                      | 0m24.809s    | Yes
+bnb       | 377                      | 0m0.280s    | Yes
+dp        | 377                      | 0m0.211s    | Yes
+greedy    | 368                      | 0m0.172s    | ?
+
+
+===========================================
+Running on easy.200.4.txt for 30 seconds
+===========================================
+
+Algorithm |      Optimal Value       | Time Taken  | Result
+----------------------------------------------------------------
+enum      | -                        | 0m30.088s (time out)   | -
+bnb       | 4077                     | 0m0.870s    | Yes
+dp        | 4077                     | 0m0.644s    | Yes
+greedy    | 4075                     | 0m0.197s    | ?
+
+
+===========================================
+Running on hard1.200.11.txt for 300 seconds
+===========================================
+
+Algorithm |      Optimal Value       | Time Taken  | Result
+----------------------------------------------------------------
+enum      | -                        | 5m0.096s  (time out)  | -
+bnb       | -                        | 5m0.156s  (time out) | -
+dp        | 126968                   | 0m21.242s    | Yes
+greedy    | 126579                   | 0m0.165s    | ?
+
+
+
+===========================================
+Running on hard1.2000.1.txt for 300 seconds
+===========================================
+Algorithm |      Optimal Value       | Time Taken  | Result
+----------------------------------------------------------------
+enum      | -                        | 5m0.096s  (time out)  | -
+bnb       | -                        | 5m0.156s  (time out)  | -
+dp        | -                        | 13m45.624s  (I run the programe manualy and kill it during 13 min because it still didn't get the answer I assume it will cost more than 2100s (100 times than the hard200 above))| No
+greedy    | 1205167                  | 0m0.261s              | ?
+
+
+So for instance if you are running the program using the bnb algorithm on the hard1.200.11.txt and kill the program after it has been running for 1 minute and the best solution at that point has 126756 in the knapsack then you should note that you killed the program and write
+
+bnb    126756	1 min  incorrect (killed)
+
+If on the other hand you were running the program using the bnb algorithm on the easy.20.1.txt and it completed after 1 second with a value of 377 then you should write
+
+bnb    377	1 second correct 
+
+Note that some knapsack implementations generate candidate solutions as they go so you can get the program to print its current best solution, while other implementations do not produce a candidate solution until the end.
+
+
+3.  Which instances does greedy solve optimally?
+
+
+
+
+During the situation when items in the choosing list can be split into parts
+
+
+
+
+Does dynamic programming work on all instances and why/why not?
+The answer is NO
+Because the dynamic programming cost a lot of ram and the complexity is very high
+The complexity is O(nW) and n is the number of the item, W is the total weight of the problem(backpack).
+dynamic programming can only be used when the total weight is small .
+
+
+Does branch-and-bound come to a stop on all instances in reasonable time?
+
+
+I think the bnb alogorithm can't make all the cases finished quickly because in some of the bad cases, the alogorithm will also make lot's of operations
+So it can't stop on all instances in a time every time
+
+explaing of bad cases:
+same as the enumeration method,so the complexity is O(2^n),n is the number of the item
+
+
+
+
+4.  Can you explain WHY the hard1 instances are easy or hard (cause problems) for
+    i) greedy
+    It is easy 
+    because the complexty of the greedy is close to a linear (because adding a sort inside so it is little bit slower than linear) 
+    ii) branch-and-bound
+    It is difficult 
+    If the number of the items are very high, as we said above in the worst case, It probably need to find all the possibilities which means it is same as enumeration
+    If the number is small, then is fine
+    
+    iii) dynamic programming
+    Because the complexity is O(n*W) so it will not change alot 
+
+
+5.  The airline has problems of size 500-2000 of similar type to the hard1 instances.  Which algorithms do you recommend using and why?
+    I choose dynamic programming algorithm because we can get the value in any situation and have a time that can be sure
+
+What should they do in the case the algorihm runs out of time?
+WE can donothing because the alogorithm need to finish
+
+Linear Programming
+==================
+
+1.  Describe how we can use the Simplex algorithm to solve the Fractional Knapsack problem. You should begin by clearly stating the fractional knapsack problem and then describe the steps required to transform this into the input to the Simplex algorithm. You should also comment on how the solution generated by the Simplex algorithm can be translated into a solution the Fractional Knapsack problem.
+
+
+or this problem I will seperate it into Maximize and constraint part
+Mazimize : s1v1 +s2v2 +.....snvn 
+Constranit: s1w1+s2w2+..... + snwn <= weight
+s1,s2,sn < = 1
+s1,s2,...sn > = 0
+s1 means item choose in th pack
+wi means weight 
+vi means value
+
+to slack form 
+ maximize
+none basic variable check heighest constraint
+
+
+2.  Will the previous approach always provide the optimal solution (explain)?
+
+
+How does its complexity compare to the greedy approach for the Fractional Knapsack problem?
+
+Yes.
+greedy approach have the lower time_complexity than the the simple alogorithm
+for the given simplex alogorithm, the time complexity not a liniear so it will be slower than the greedy
+for the greedy alogorithm, the time complexity is O(n) plus the sort time during the greedy ; and the space complexity is O(n)
+
+
+4. Look up the concept of a relaxation of a (mixed) integer linear program and explain how it might let us use the Simplex algorithm to solve the 0/1 Knapsack problem.
+
+we should also use the bnd method here for the integer program 
+The linear releaxiation will have the basic upper bound 
+if the solution is the the integer,then the solution is the optimal solution
+if the solution is not feasible, then there is no solution for the integer program 
+if it is not a integer,then it is a appromate solution
+if we want the exact solution,then
+for each branch, we solve it,if the branch solution is integer, we can finish this branch (the branch is done)
+                            if the solution is less than the current best integer solution, then the branch will be changed to another(done for the branch)
+                            choose another number(variable) and do the branch operation again.
+
+

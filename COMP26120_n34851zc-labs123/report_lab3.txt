@@ -1,0 +1,66 @@
+Name: Zhuyan Cheng
+
+
+This file has been provided to help you structure your write-up of Lab 3, Part c. Some questions can be answered with a single sentence, some may require much longer answers. You are free to edit/rearrange this file as much as you want.
+
+All questions should be answered for each of your chosen data structures. 
+
+
+------------------------
+Initial Expectations
+------------------------
+
+
+>> Do you expect this data structure to be preferable to the others on all inputs, most  inputs, some inputs? Why?
+The hashtable datastructure is expected to be preferable.Above all, the collision will always happen and it is not depend on which function we choose for.So the insertion time of hashset will be longer than the dynamic arrary.
+Moreover, If the imputs are sorted , the tree function will works same like the link list or b+ tree,and we know that the sort step must be done before we use the binary search tree. 
+
+
+>> Do you expect your answer to change if the dictionary is in the best/worst case for sorting? Why?
+I will not expectmmy answer to change because we can't only talk about lower bound or upper bound , Theta is the most normal case
+
+
+>> Can you phrase what you expect in terms of a one or two sentence hypothesis that you can test?
+In the most of the time, The hashtable will operation faster than the other ones
+
+
+------------------------
+Experimental Design
+------------------------
+
+
+>> How are you going to define what it means for one data stucture to be preferable to another?
+The define will be control the same data size, same data value , Run on the same computer  Then compare for the excutiontime of the different way.Choose some random data The one with the most short average time is the preferable
+
+
+>> Which conditions will you vary in your experiment? 
+
+The data set size, weather the data is sorted ,is that the best case data or the worst case data are the conditions of the experiment
+
+>> How will you vary them? Why did you make these choices? Did you use theoretical complexities, best, worst and average cases to inform your decisions?
+I will choose the same data file with the same data size,one data is short data and another have the bigger one, sorted and halfsorted.Because the same size of the data will make sure it follow the definition of preferable.Use the average cases of data will make it looks more like a real world value.
+
+
+>> How will you generate the data for your experiments?
+write a shell randomly get the value with short and large. Then pick half of the data and sort them as a half sort data .And the remaning of the data will become the basic data.
+
+
+>> How will you validate your findings?
+record the running time of different ways thenmake a table to compare and find conclusions
+
+
+------------------------
+Results and Analysis
+------------------------
+
+
+>> What results did you record?
+I recorded the time excute, The size of the data, the type of the data(normal data or halfsorted data),I find that the time cost for btree is 0.244 second, the time cost for hashset is 0.243 second, the time spend for dynamic is 0.267 second for 8 times run
+
+>> What does this tell you about the performance of the data structure?
+The dynamic arrary cost the most which is the slowest and not preferable, The btree and hash_set is quicker so is preferable
+
+>> What is the answer to the question "Under what conditions is it preferable to use this data structure?"
+
+sorted, large data
+
